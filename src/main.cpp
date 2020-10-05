@@ -11,19 +11,32 @@
 
 int main() {
 
-    DescriptorProcessor processor("../img/object.jpeg", "../img/");
-
-    size_t size = processor.getSize();
-    printf("Total photos to process: %zu.\n", size);
-    if (!size) {
-        printf("Error: couldn't load images\n");
-        return 1;
+    {// First dataset
+        DescriptorProcessor processor("../img_first_dataset/object.jpeg", "../img_first_dataset/");
+        size_t size = processor.getSize();
+        printf("Total photos to process: %zu.\n", size);
+        if (!size) {
+            printf("Error: couldn't load images\n");
+            return 1;
+        }
+        processor.setHaussian(400);
+        processor.process();
+        std::string metricsFilename = "../results_1.csv";
+        processor.saveMetricsToFile(metricsFilename);
     }
-    processor.setHaussian(400);
-    processor.process();
-//    processor.displayMatches();
 
-    std::string metricsFilename = "../results_final.csv";
-    processor.saveMetricsToFile(metricsFilename);
+    {// Second dataset
+        DescriptorProcessor processor("../img_second_dataset/object.jpg", "../img_second_dataset/");
+        size_t size = processor.getSize();
+        printf("Total photos to process: %zu.\n", size);
+        if (!size) {
+            printf("Error: couldn't load images\n");
+            return 1;
+        }
+        processor.setHaussian(400);
+        processor.process();
+        std::string metricsFilename = "../results_2.csv";
+        processor.saveMetricsToFile(metricsFilename);
+    }
     return 0;
 }
