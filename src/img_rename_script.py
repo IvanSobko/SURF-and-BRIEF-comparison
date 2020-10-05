@@ -9,8 +9,8 @@ def files(path):
 
 i = 0
 for file in files("../img_second_dataset/"):
-    if "IMAGE" in file:
+    if "scene" in file:
         num = str(i)
         num = num.zfill(3)
-        os.rename("../img_second_dataset/" + file, f"../img_second_dataset/scene_{num}.jpg")
+        os.rename("../img_second_dataset/" + file, f"../img_second_dataset/scene2_{num}.jpg")
         i = i + 1

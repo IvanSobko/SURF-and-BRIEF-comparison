@@ -9,7 +9,7 @@
 class DescriptorProcessor {
 
 public:
-    DescriptorProcessor(std::string objectPath, std::string scenesPath);
+    DescriptorProcessor(const std::string objectPath, const std::string scenesPath);
 
     void setHaussian(int haussian);
 

@@ -12,7 +12,7 @@
 int main() {
 
     {// First dataset
-        DescriptorProcessor processor("../img_first_dataset/object.jpeg", "../img_first_dataset/");
+        DescriptorProcessor processor("../img_first_dataset/object1.jpeg", "../img_first_dataset/");
         size_t size = processor.getSize();
         printf("Total photos to process: %zu.\n", size);
         if (!size) {
@@ -26,7 +26,7 @@ int main() {
     }
 
     {// Second dataset
-        DescriptorProcessor processor("../img_second_dataset/object.jpg", "../img_second_dataset/");
+        DescriptorProcessor processor("../img_second_dataset/object2.jpg", "../img_second_dataset/");
         size_t size = processor.getSize();
         printf("Total photos to process: %zu.\n", size);
         if (!size) {

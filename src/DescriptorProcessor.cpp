@@ -10,7 +10,7 @@
 #include "opencv2/imgproc.hpp"
 
 
-DescriptorProcessor::DescriptorProcessor(std::string objectPath, std::string scenesPath) {
+DescriptorProcessor::DescriptorProcessor(const std::string objectPath, const std::string scenesPath) {
     mObjectImg = imread(objectPath, cv::IMREAD_GRAYSCALE);
     std::vector<std::string> sceneImgFiles = findSceneImages(scenesPath);
     for (const auto &file: sceneImgFiles) {
@@ -26,7 +26,9 @@ DescriptorProcessor::DescriptorProcessor(std::string objectPath, std::string sce
     mSceneKeypoints.resize(mSize);
     mSURFDetector = cv::xfeatures2d::SURF::create(mMinHaussian);
     mMatcher = cv::FlannBasedMatcher::create();
+
 }
+
 
 void DescriptorProcessor::displayMatches() {
     int num = 0;
@@ -92,7 +94,7 @@ void DescriptorProcessor::process() {
             continue;
         }
 
-        //-- Step 6: Get the corners from the object.jpeg
+        //-- Step 6: Get the corners from the object1.jpeg
         std::vector<cv::Point2f> obj_corners(4);
         obj_corners[0] = cv::Point2f(0, 0);
         obj_corners[1] = cv::Point2f((float) mObjectImg.cols, 0);
@@ -101,7 +103,7 @@ void DescriptorProcessor::process() {
         std::vector<cv::Point2f> scene_corners(4);
 
         perspectiveTransform(obj_corners, scene_corners, H);
-
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         //-- Step 7: Draw lines between the corners of scene
         line(img_matches, scene_corners[0] + cv::Point2f(mObjectImg.cols, 0),
              scene_corners[1] + cv::Point2f(mObjectImg.cols, 0), cv::Scalar(0, 255, 0), 4);
@@ -115,7 +117,6 @@ void DescriptorProcessor::process() {
         printf("\rFile %s is ready [%i/%zu are ready(%i skipped).]", filename.c_str(),
                i + 1, mSize, (i - static_cast<int>(mReadyImgs.size())));
 
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         mReadyImgs.push_back({filename, img_matches});
 
         //time for some metrics
@@ -159,14 +160,14 @@ std::vector<std::string> const DescriptorProcessor::findSceneImages(const std::s
     std::vector<std::string> res;
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
         std::string filename = entry.path().filename().string();
-        if (filename.find("scene") != std::string::npos) {
+        if (filename.find("object") == std::string::npos) {
             res.push_back(filename);
         }
 
     }
-    std::sort(res.begin(), res.end(), [](std::string vec1, std::string vec2) {
-        return vec1 < vec2;
-    });
+//    std::sort(res.begin(), res.end(), [](std::string vec1, std::string vec2) {
+//        return vec1 < vec2;
+//    });
     return res;
 }
 
@@ -187,6 +188,8 @@ void DescriptorProcessor::saveMetricsToFile(std::string &filename) {
         writer.addDataInRow(dataToAdd.begin(), dataToAdd.end());
     }
 }
+
+
 
 std::vector<std::string> DescriptorProcessor::Metrics::toVector() const {
     std::vector<std::string> res;
