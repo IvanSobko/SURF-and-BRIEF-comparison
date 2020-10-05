@@ -1,1 +1,1 @@
-# SURF-and-BRIEF-comparison
+# SURF and BRISK comparison
